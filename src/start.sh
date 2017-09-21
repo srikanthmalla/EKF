@@ -1,4 +1,6 @@
-cd /home/malla/self_driving_course/term2/EKF/build 
+cd ..
+mkdir build 
+cd build
 cmake ..
 make 
 ./test1
