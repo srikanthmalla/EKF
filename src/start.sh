@@ -2,6 +2,7 @@ cd ..
 mkdir build 
 cd build
 cmake ..
-make 
-./test1
+make
+./ExtendedKF
+#./test1
 cd ../src
