@@ -35,6 +35,8 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd h =VectorXd(3);
   h << rho, theta, rho_dot;
   VectorXd y = z-h;
+  if( y(1) > PI_ ) y(1) -= 2*PI_;
+  if( y(1) < -PI_ ) y(1) += 2*PI_;
   KF(y);
 }
 void KalmanFilter::KF(const VectorXd &y){

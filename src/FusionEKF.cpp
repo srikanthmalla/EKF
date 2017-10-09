@@ -62,7 +62,6 @@ FusionEKF::~FusionEKF() {}
 
 void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
-  Eigen::VectorXd z = measurement_pack.raw_measurements_;
 //  cout<<z<<"\n";
   /*****************************************************************************
    *  Initialization
@@ -88,6 +87,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
         float rho_dot = measurement_pack.raw_measurements_[2];
         float x = rho*cos(phi);
         float y = rho*sin(phi);
+  //      if (x<0.0001) x=0.0001;
+  //      if (y<0.0001) y=0.0001;
         float vx = rho_dot*cos(phi);
         float vy = rho_dot*sin(phi);
         ekf_.x_<<x,y,vx,vy;
@@ -146,8 +147,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Use the sensor type to perform the update step.
      * Update the state and covariance matrices.
    */
+
+  Eigen::VectorXd z = measurement_pack.raw_measurements_;
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
-    cout<<"radar\n";
     if( z(1)> ekf_.PI_ ) z(1) = z(1)-2*ekf_.PI_;
     if( z(1)< -ekf_.PI_ ) z(1) = z(1)+2*ekf_.PI_; 
     // Radar updates
@@ -155,8 +157,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     ekf_.R_ = R_radar_;
     ekf_.UpdateEKF(z);
   } else {
-    cout<<"laser\n";
-    cout<<z<<"\n";
+    //cout<<"laser\n";
+    //cout<<z<<"\n";
     // Laser updates
     ekf_.R_=R_laser_;
     ekf_.H_= H_laser_;
